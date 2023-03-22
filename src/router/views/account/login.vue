@@ -74,8 +74,6 @@ export default {
            this.$store.dispatch("auth/login", user_data);
            this.submitted = true;
           }
-      
-     
     },
   },
   mounted() {},
