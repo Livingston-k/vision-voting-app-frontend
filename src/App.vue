@@ -2,11 +2,11 @@
 import appConfig from "@/app.config";
 
 import { notificationMethods } from "@/state/helpers";
-
+import axios from "axios";
 export default {
   name: "app",
   page: {
-    // All subcomponent titles will be injected into this template.
+    // All subcontinent titles will be injected into this template.
     titleTemplate(title) {
       title = typeof title === "function" ? title(this.$store) : title;
       return title ? `${title} | ${appConfig.title}` : appConfig.title;
@@ -27,6 +27,21 @@ export default {
   },
   methods: {
     clearNotification: notificationMethods.clear,
+  },
+
+  beforeCreate() {
+      axios.defaults.headers.common["Authorization"] = "";
+      axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+      axios.defaults.headers.common["Accept"] = "application/json";
+      axios.defaults.headers.common["Content-Type"] = "application/json";
+
+    this.$store.commit("auth/initializeStore");
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      this.$store.dispatch("auth/Authenticated_user");
+    } 
+  
   },
 };
 </script>

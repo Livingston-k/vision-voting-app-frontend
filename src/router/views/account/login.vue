@@ -1,6 +1,4 @@
 <script>
-import axios from "axios";
-
 import Layout from "../../layouts/auth";
 import {
   authMethods,
@@ -30,7 +28,7 @@ export default {
   },
   data() {
     return {
-      email: "admin@themesbrand.com",
+      email: "kaddulivingston@gmail.com",
       password: "123456",
       submitted: false,
       authError: null,
@@ -48,7 +46,7 @@ export default {
     },
   },
   computed: {
-    ...mapState("authfack", ["status"]),
+    ...mapState("auth", ["status"]),
     notification() {
       return this.$store ? this.$store.state.notification : null;
     },
@@ -66,52 +64,18 @@ export default {
 
       if (this.$v.$invalid) {
         return;
-      } else {
-        if (process.env.VUE_APP_DEFAULT_AUTH === "firebase") {
-          this.tryingToLogIn = true;
-          // Reset the authError if it existed.
-          this.authError = null;
-          return (
-            this.logIn({
-              email: this.email,
-              password: this.password,
-            })
-              // eslint-disable-next-line no-unused-vars
-              .then((token) => {
-                this.tryingToLogIn = false;
-                this.isAuthError = false;
-                // Redirect to the originally requested page, or to the home page
-                this.$router.push(
-                  this.$route.query.redirectFrom || {
-                    name: "default",
-                  }
-                );
-              })
-              .catch((error) => {
-                this.tryingToLogIn = false;
-                this.authError = error ? error : "";
-                this.isAuthError = true;
-              })
-          );
-        } else if (process.env.VUE_APP_DEFAULT_AUTH === "fakebackend") {
-          const { email, password } = this;
-          if (email && password) {
-            this.login({
-              email,
-              password,
-            });
-          }
-        } else if (process.env.VUE_APP_DEFAULT_AUTH === "authapi") {
-          axios
-            .post("http://127.0.0.1:8000/api/login", {
-              email: this.email,
-              password: this.password,
-            })
-            .then((res) => {
-              return res;
-            });
-        }
       }
+      const { email, password } = this;
+          if (email && password) {
+            const user_data = {
+              password,
+              email
+            }
+           this.$store.dispatch("auth/login", user_data);
+           this.submitted = true;
+          }
+      
+     
     },
   },
   mounted() {},
@@ -150,19 +114,7 @@ export default {
                 </div>
               </router-link>
             </div>
-            <b-alert
-              v-model="isAuthError"
-              variant="danger"
-              class="mt-3"
-              dismissible
-              >{{ authError }}</b-alert
-            >
-            <div
-              v-if="notification.message"
-              :class="'alert ' + notification.type"
-            >
-              {{ notification.message }}
-            </div>
+           
 
             <b-form class="p-2" @submit.prevent="tryToLogIn">
               <b-form-group
@@ -220,6 +172,19 @@ export default {
                 <b-button type="submit" variant="primary" class="btn-block"
                   >Log In</b-button
                 >
+                 <b-alert
+              v-model="isAuthError"
+              variant="danger"
+              class="mt-3"
+              dismissible
+              >{{ authError }}</b-alert
+            >
+            <div
+              v-if="notification.message"
+              :class="'alert ' + notification.type"
+            >
+              {{ notification.message }}
+            </div>
               </div>
               <div class="mt-4 text-center">
                 <h5 class="font-size-14 mb-3">Sign in with</h5>
@@ -257,6 +222,7 @@ export default {
                 </router-link>
               </div>
             </b-form>
+            
           </div>
           <!-- end card-body -->
         </div>

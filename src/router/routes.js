@@ -66,11 +66,7 @@ export default [
     meta: {
       authRequired: true,
       beforeResolve(routeTo, routeFrom, next) {
-        if (process.env.VUE_APP_DEFAULT_AUTH === "firebase") {
           store.dispatch('auth/logOut')
-        } else {
-          store.dispatch('authfack/logout')
-        }
         const authRequiredOnPreviousRoute = routeFrom.matched.some(
           (route) => route.push('/login')
         )
