@@ -96,7 +96,7 @@ export default {
               <div class="col-7">
                 <div class="text-primary p-4">
                   <h5 class="text-primary">Reset Password</h5>
-                  <p>Re-Password with Skote.</p>
+                  <p>Re-Password with Vision Voting.</p>
                 </div>
               </div>
               <div class="col-5 align-self-end">
@@ -173,8 +173,7 @@ export default {
             >
           </p>
           <p>
-            © {{ new Date().getFullYear() }} Skote. Crafted with
-            <i class="mdi mdi-heart text-danger"></i> by Themesbrand
+            © {{ new Date().getFullYear() }} Vision Voting App
           </p>
         </div>
       </div>

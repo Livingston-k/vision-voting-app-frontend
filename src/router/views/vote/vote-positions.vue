@@ -125,7 +125,7 @@ export default {
               <li
                 v-b-tooltip.hover.top
                 class="list-inline-item me-3"
-                title="Comments"
+                title="Votes"
               >
                 <i class="bx bx-comment-dots me-1"></i>
                 {{ grid.comment }}
@@ -135,39 +135,6 @@ export default {
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-lg-12">
-        <ul
-          class="pagination pagination-rounded justify-content-center mt-2 mb-5"
-        >
-          <li class="page-item disabled">
-            <a href="#" class="page-link">
-              <i class="mdi mdi-chevron-left"></i>
-            </a>
-          </li>
-          <li class="page-item">
-            <a href="#" class="page-link">1</a>
-          </li>
-          <li class="page-item active">
-            <a href="#" class="page-link">2</a>
-          </li>
-          <li class="page-item">
-            <a href="#" class="page-link">3</a>
-          </li>
-          <li class="page-item">
-            <a href="#" class="page-link">4</a>
-          </li>
-          <li class="page-item">
-            <a href="#" class="page-link">5</a>
-          </li>
-          <li class="page-item">
-            <a href="#" class="page-link">
-              <i class="mdi mdi-chevron-right"></i>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- end ro w -->
+   
   </Layout>
 </template>

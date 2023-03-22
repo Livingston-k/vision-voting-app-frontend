@@ -9,25 +9,25 @@ export const state = {
     user_data: null,
     status: { loggeduser: false },
     loggedIn: false,
-    loginstatus: false,
+    Spinerstatus: false,
     login_errors: null,
     lock_screen: !!localStorage.getItem('lockscreen')
 }
 
 
 export const getters = {
+    user: state => state.user,
     loggedIn: state => state.status.loggeduser,
     token: state => state.status.token,
 }
 
 export const mutations = {
-    SET_LOGIN_STATUS(state, newValue) {
-        state.loginstatus = newValue;
+    SET_STATUS(state, newValue) {
+        state.Spinerstatus = newValue;
     },
     SET_AUTH_USER(state, user) {
         state.status = { loggingIn: true };
-        state.user = { 'user': user.data };
-        state.user_data = { 'user': user.data };
+        state.user = user.user;
     },
     loginRequest(state, user) {
         state.status = { loggingIn: true };
@@ -35,7 +35,7 @@ export const mutations = {
     },
     loginSuccess(state, user) {
         state.status = { loggeduser: true };
-        state.user = user;
+        state.user = user.user;
         state.token = user.token;
 
     },
@@ -61,7 +61,6 @@ export const mutations = {
     initializeStore(state) {
         if (localStorage.getItem('token')) {
             state.status = { loggeduser: true };
-            // state.user = localStorage.getItem('user')
             state.token = localStorage.getItem('token')
         } else {
             state.user = null
@@ -72,49 +71,58 @@ export const mutations = {
 };
 
 export const actions = {
+      // Registers in the user.
+    // eslint-disable-next-line no-unused-vars
+    register({commit, dispatch },user_data){
+    commit('SET_STATUS', true)
+        axios
+            .post("auth/register",user_data)
+            .then(() => {
+                commit('SET_STATUS', false)
+                dispatch('login',{email:user_data.email,password:user_data.password});
+            }).catch((error) => {
+                commit('SET_STATUS', false)
+                dispatch('notification/error', error, { root: true });
+            })
+    },
     // Logs in the user.
     // eslint-disable-next-line no-unused-vars
     login({ commit, dispatch }, user_data) {
-        commit('SET_LOGIN_STATUS', true)
+        commit('SET_STATUS', true)
         axios
             .post("auth/login",user_data)
             .then((res) => {
-                commit('SET_LOGIN_STATUS', true)
+                commit('SET_STATUS', false)
                     commit('loginSuccess', res.data);
                         localStorage.setItem("token", res.data.token)
                         const token = res.data.token
                         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                        router.push('/');
-                    
-                
+                        if(res.data.user.type){
+                          dispatch('layout/changeLayoutType', {layoutType:'horizontal'}, { root: true });
+                          router.push('/');
+                        
+                        }else{
+                        dispatch('layout/changeLayoutType',{layoutType:'vertical'}, { root: true });
+                         router.push('/home');
+                        }
+                        
             }).catch((error) => {
-                commit('SET_LOGIN_STATUS', false)
+                commit('SET_STATUS', false)
                 commit('loginFailure', error);
                 dispatch('notification/error', error, { root: true });
-
             })
     },
     Authenticated_user({ commit, dispatch }) {
         axios
-            .get("authenticated")
+            .get("auth/authenticated")
             .then((res) => {
                 commit('SET_AUTH_USER', res.data);
+                 if(res.data.user.type){
+                          dispatch('layout/changeLayoutType', {layoutType:'horizontal'}, { root: true });
+                        }else{ 
+                           dispatch('layout/changeLayoutType',{layoutType:'vertical'}, { root: true });
+                        }
             }).catch((eror) => {
-                if (eror.response.status == 401) {
-                    dispatch('logout')
-                }
-            })
-    },
-    UnclockScreen({ commit, dispatch }, payload) {
-        axios
-            .post("unlockscreen", payload)
-            .then(() => {
-                localStorage.setItem("lockscreen", false);
-                commit('SET_UNLOCK', false);
-                router.push('/');
-
-            }).catch((eror) => {
-                commit('SET_UNLOCK', true);
                 if (eror.response.status == 401) {
                     dispatch('logout')
                 }
