@@ -42,16 +42,6 @@
           }
         }
       },
-      "site": {
-        "list": {
-          "github": "GitHub",
-          "bitbucket": "Bitbucket",
-          "dribbble": "Dribbble",
-          "dropbox": "Dropbox",
-          "mailchimp": "Mail Chimp",
-          "slack": "Slack"
-        }
-      },
       "notification": {
         "badge": "3",
         "text": "Notifications",
@@ -79,10 +69,9 @@
         "button": "View More.."
       },
       "henry": {
-        "text": "Henry",
+        "text": "Kaddu Livingston",
         "list": {
           "profile": "Profile",
-          "mywallet": "My Wallet",
           "settings": "Settings",
           "lockscreen": "Lock screen",
           "logout": "Logout"

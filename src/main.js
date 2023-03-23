@@ -12,6 +12,7 @@ import store from '@/state/store'
 import App from './App.vue'
 import i18n from './i18n'
 import tinymce from 'vue-tinymce-editor'
+import VueBootstrapToasts from "vue-bootstrap-toasts";
 import axios from 'axios'
 
 if (process.env.NODE_ENV === 'production') {
@@ -19,7 +20,7 @@ axios.defaults.baseURL = 'https://api.vision.com/api/' //production
 } else {
 axios.defaults.baseURL = 'http://localhost:3000/api/' //development
 }
-
+Vue.use(VueBootstrapToasts);
 Vue.component('tinymce', tinymce)
 Vue.use(VueRouter)
 Vue.use(vco)

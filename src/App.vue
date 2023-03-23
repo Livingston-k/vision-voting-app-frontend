@@ -12,13 +12,7 @@ export default {
       return title ? `${title} | ${appConfig.title}` : appConfig.title;
     },
   },
-  mounted() {
-    // document.querySelector("html").setAttribute('dir', 'rtl')
-  },
   watch: {
-    /**
-     * Clear the alert message on route change
-     */
     // eslint-disable-next-line no-unused-vars
     $route(to, from) {
       // clear alert on location change

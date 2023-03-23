@@ -17,6 +17,7 @@ export const state = {
 
 export const getters = {
     user: state => state.user,
+    Type: state => state.user ? state.user.type:1,
     loggedIn: state => state.status.loggeduser,
     token: state => state.status.token,
 }

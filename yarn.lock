@@ -9024,6 +9024,10 @@ vue-apexcharts@^1.6.0:
   resolved "https://registry.yarnpkg.com/vue-apexcharts/-/vue-apexcharts-1.6.0.tgz#c7d3afd93f712433d404e5ceeb4e3aa65f422af2"
   integrity sha512-sT6tuVTLBwfH3TA7azecDNS/W70bmz14ZJI7aE7QIqcG9I6OywyH7x3hcOeY1v1DxttI8Svc5RuYj4Dd+A5F4g==
 
+vue-bootstrap-toasts@Livingston-k/b-vue-toast#main:
+  version "1.0.7"
+  resolved "https://codeload.github.com/Livingston-k/b-vue-toast/tar.gz/6d9e614feca56abc17f90c7457a4547306f71c0b"
+
 vue-carousel@^0.18.0:
   version "0.18.0"
   resolved "https://registry.yarnpkg.com/vue-carousel/-/vue-carousel-0.18.0.tgz#478dfcad3abe2ee44c227020b6e60fb8484dc9f1"
