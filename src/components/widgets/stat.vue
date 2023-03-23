@@ -9,8 +9,8 @@ export default {
       default: ""
     },
     value: {
-      type: String,
-      default: ""
+      type: Number,
+      default: 0
     },
     icon: {
       type: String,
@@ -21,6 +21,7 @@ export default {
 </script>
 
 <template>
+   <div class="col-lg-3">
   <div class="card mini-stats-wid">
     <div class="card-body">
       <div class="media">
@@ -37,6 +38,7 @@ export default {
       </div>
     </div>
     <!-- end card-body -->
+  </div>
   </div>
   <!-- end card -->
 </template>

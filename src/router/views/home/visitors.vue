@@ -135,7 +135,7 @@ export default {
 <template>
   <div class="card-body">
     <div class="d-flex flex-wrap">
-      <h5 class="card-title me-2">Visitors</h5>
+      <h5 class="card-title me-2">Votes</h5>
       <div class="ms-auto">
         <div class="toolbar button-items text-end">
           <button

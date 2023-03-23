@@ -1,29 +1,41 @@
 export const state = {
-    type: null,
-    message: null
+    notificationtype: null,
+    notification_message: null,
+    notification_show: false,
 };
 
 export const mutations = {
     success(state, message) {
-        state.type = 'alert-success';
-        state.message = message;
+        state.notificationtype = 'success';
+        state.notification_message = message;
+        state.notification_show = true;
     },
     error(state, message) {
-        state.type = 'alert-danger';
-        state.message = message;
+        state.notificationtype = 'danger';
+        state.notification_message = message;
+        state.notification_show = true;
     },
+
     clear(state) {
-        state.type = null;
-        state.message = null;
+        state.notificationtype = null;
+        state.notification_message = null;
+        state.notification_show = false;
     }
 };
 
 export const actions = {
-    success({ commit }, message) {
+    success({ commit, dispatch }, message) {
         commit('success', message);
+
+        setTimeout(() => {
+            dispatch('clear');
+        }, 4000);
     },
-    error({ commit }, message) {
+    error({ commit, dispatch }, message) {
         commit('error', message);
+        setTimeout(() => {
+            dispatch('clear');
+        }, 4000);
     },
     clear({ commit }) {
         commit('clear');

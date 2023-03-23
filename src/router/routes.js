@@ -95,8 +95,18 @@ export default [
     path: '*',
     redirect: '404',
   },
-  
-
+  {
+    path: '/positions',
+    name: 'Positions',
+    meta: { authRequired: true },
+    component: () => import('./views/position/view-positions.vue')
+  },
+  {
+    path: '/candidates',
+    name: 'Candidates',
+    meta: { authRequired: true },
+    component: () => import('./views/candidates/view-candidates.vue')
+  },
   {
     path: '/pages/maintenance',
     name: 'Maintenance',

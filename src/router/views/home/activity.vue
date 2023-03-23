@@ -11,7 +11,7 @@ export default {
     <div class="card-body">
       <div class="d-flex">
         <div class="me-2">
-          <h5 class="card-title mb-4">Activity</h5>
+          <h5 class="card-title mb-4">Vote Activity</h5>
         </div>
         <b-dropdown
           text="Button text via Prop"
@@ -32,7 +32,7 @@ export default {
           <b-dropdown-item href="#">Separated link</b-dropdown-item>
         </b-dropdown>
       </div>
-      <div data-simplebar class="mt-2" style="max-height: 280px">
+      <div data-simplebar class="mt-2" style="max-height: 365px">
         <ul class="verti-timeline list-unstyled">
           <li class="event-list active">
             <div class="event-timeline-dot">
