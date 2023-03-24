@@ -26,6 +26,7 @@ export default {
   },
   data() {
     return {
+      token:localStorage.getItem('token'),
       languages: [
         {
           flag: require("@/assets/images/flags/us.jpg"),
@@ -218,7 +219,7 @@ export default {
           </form>
         </b-dropdown>
        
-
+<span v-if="token">
     
         <div class="dropdown d-none d-lg-inline-block ms-1">
           <button
@@ -229,7 +230,7 @@ export default {
             <i class="bx bx-fullscreen"></i>
           </button>
         </div>
-
+ 
         <b-dropdown
           menu-class="dropdown-menu-lg p-0 dropdown-menu-end"
           toggle-class="header-item noti-icon"
@@ -367,23 +368,22 @@ export default {
           </div>
         </b-dropdown>
 
-        <b-dropdown right variant="black" toggle-class="header-item">
+       
+          <b-dropdown right variant="black" toggle-class="header-item">
           <template v-slot:button-content>
             <img
               class="rounded-circle header-profile-user"
               src="@/assets/images/users/avatar-1.jpg"
               alt="Header Avatar"
             />
-            <span class="d-none d-xl-inline-block ms-1">{{
-              $t("navbar.dropdown.henry.text")
-            }}</span>
+            <span class="d-none d-xl-inline-block ms-1"></span>
             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
           </template>
           <!-- item-->
           <b-dropdown-item>
-            <router-link tag="span" to="/contacts/profile">
+            <router-link tag="span" to="javascript:;">
               <i class="bx bx-user font-size-16 align-middle me-1"></i>
-              {{ $t("navbar.dropdown.henry.list.profile") }}
+             {{ this.$store.getters["auth/fullName"] }}
             </router-link>
           </b-dropdown-item>
         
@@ -395,6 +395,16 @@ export default {
             {{ $t("navbar.dropdown.henry.list.logout") }}
           </a>
         </b-dropdown>
+        </span>
+        <span v-else>
+<router-link tag="span" to="/login">
+<button class="btn btn-light m-2">Login</button>
+</router-link>
+<router-link tag="span" to="/register">
+<button class="btn btn-light">Register</button>
+</router-link>
+        </span>
+      
       </div>
     </div>
   </header>

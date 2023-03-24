@@ -11,13 +11,13 @@ export const state = {
     loggedIn: false,
     Spinerstatus: false,
     login_errors: null,
-    lock_screen: !!localStorage.getItem('lockscreen')
 }
 
 
 export const getters = {
     user: state => state.user,
-    Type: state => state.user ? state.user.type:1,
+    Type: state => state.user ? state.user.type : true,
+    fullName: state => state.user ? state.user.name : "",
     loggedIn: state => state.status.loggeduser,
     token: state => state.status.token,
 }
@@ -72,15 +72,15 @@ export const mutations = {
 };
 
 export const actions = {
-      // Registers in the user.
+    // Registers in the user.
     // eslint-disable-next-line no-unused-vars
-    register({commit, dispatch },user_data){
-    commit('SET_STATUS', true)
+    register({ commit, dispatch }, user_data) {
+        commit('SET_STATUS', true)
         axios
-            .post("auth/register",user_data)
+            .post("auth/register", user_data)
             .then(() => {
                 commit('SET_STATUS', false)
-                dispatch('login',{email:user_data.email,password:user_data.password});
+                dispatch('login', { email: user_data.email, password: user_data.password });
             }).catch((error) => {
                 commit('SET_STATUS', false)
                 dispatch('notification/error', error, { root: true });
@@ -91,22 +91,22 @@ export const actions = {
     login({ commit, dispatch }, user_data) {
         commit('SET_STATUS', true)
         axios
-            .post("auth/login",user_data)
+            .post("auth/login", user_data)
             .then((res) => {
                 commit('SET_STATUS', false)
-                    commit('loginSuccess', res.data);
-                        localStorage.setItem("token", res.data.token)
-                        const token = res.data.token
-                        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                        if(res.data.user.type){
-                          dispatch('layout/changeLayoutType', {layoutType:'horizontal'}, { root: true });
-                          router.push('/');
-                        
-                        }else{
-                        dispatch('layout/changeLayoutType',{layoutType:'vertical'}, { root: true });
-                         router.push('/home');
-                        }
-                        
+                commit('loginSuccess', res.data);
+                localStorage.setItem("token", res.data.token)
+                const token = res.data.token
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                if (res.data.user.type) {
+                    dispatch('layout/changeLayoutType', { layoutType: 'horizontal' }, { root: true });
+                    router.push('/');
+
+                } else {
+                    dispatch('layout/changeLayoutType', { layoutType: 'vertical' }, { root: true });
+                    router.push('/home');
+                }
+
             }).catch((error) => {
                 commit('SET_STATUS', false)
                 commit('loginFailure', error);
@@ -118,11 +118,11 @@ export const actions = {
             .get("auth/authenticated")
             .then((res) => {
                 commit('SET_AUTH_USER', res.data);
-                 if(res.data.user.type){
-                          dispatch('layout/changeLayoutType', {layoutType:'horizontal'}, { root: true });
-                        }else{ 
-                           dispatch('layout/changeLayoutType',{layoutType:'vertical'}, { root: true });
-                        }
+                if (res.data.user.type) {
+                    dispatch('layout/changeLayoutType', { layoutType: 'horizontal' }, { root: true });
+                } else {
+                    dispatch('layout/changeLayoutType', { layoutType: 'vertical' }, { root: true });
+                }
             }).catch((eror) => {
                 if (eror.response.status == 401) {
                     dispatch('logout')
