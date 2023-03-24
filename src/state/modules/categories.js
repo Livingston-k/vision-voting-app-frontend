@@ -1,41 +1,41 @@
 import axios from "axios";
 
 export const state = {
-    positions: [],
+    category: [],
     spinner:false
 };
 
 export const getters = {
-    Positions: state => state.positions,
+    Category: state => state.category,
     Spinner: state => state.spinner,
 };
 
 export const mutations = {
-    setPositions: (state, newValue) => state.positions = newValue.data,
+    setCategory: (state, newValue) => state.category = newValue.data,
     setSpinner: (state, newValue) => state.spinner = newValue,
 };
 
 export const actions = {
-    fetchPositions({ commit, dispatch }) {
+    fetchCategory({ commit, dispatch }) {
           commit('setSpinner',true)
         axios
-            .get("positions?page=1&limit=30")
+            .get("categories?page=1&limit=30")
             .then((res) => {
                 commit('setSpinner',false)
-                commit('setPositions', res.data)
+                commit('setCategory', res.data)
             }).catch((error) => {
                  commit('setSpinner',false)
                 dispatch('notification/error', error, { root: true });
             })
     },
 
-      creatPositions({ commit, dispatch },payload) {
+      creatCategory({ commit, dispatch },payload) {
           commit('setSpinner',true)
         axios
-            .post("positions",payload)
+            .post("categories",payload)
             .then(() => {
                commit('setSpinner',false)
-               dispatch('fetchPositions');
+               dispatch('fetchCategory');
             let message = { 'msg': "Position created successfully" }
             dispatch('notification/success', message, { root: true })
 

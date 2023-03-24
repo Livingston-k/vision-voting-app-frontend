@@ -3,6 +3,7 @@ import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import appConfig from "@/app.config";
 import { required } from "vuelidate/lib/validators";
+import { ModelListSelect } from "vue-search-select";
 import {
     mapGetters,
     mapActions,
@@ -15,12 +16,13 @@ import {
  */
 export default {
   page: {
-    title: "Contact candidate Grid",
+    title: "Candidates",
     meta: [{ name: "description", content: appConfig.description }],
   },
-  components: { Layout, PageHeader },
+  components: { Layout, PageHeader,ModelListSelect },
   data() {
     return {
+      model_id:"",
       title: "  Candidates",
       items: [
         {
@@ -33,8 +35,8 @@ export default {
       candidate: {
         firstName: "",
         lastName: "",
-        positionId: "",
-        photo: "default.png",
+        categoryId: "",
+        photo: "",
       },
      
     };
@@ -43,7 +45,8 @@ export default {
     candidate: {
       firstName: { required },
       lastName: { required },
-      positionId: { required },
+      categoryId: { required },
+      photo: { required },
     },
   },
     computed: {
@@ -53,21 +56,23 @@ export default {
             "notification_show",
         ]),
         ...mapGetters("candidates", ["Candidates", "Spinner"]),
+        ...mapGetters("categories", ["Category"]),
     },
     watch: {
         notification_show(newValue) {
             // Do whatever makes sense now
             if (newValue == true) {
                 this.closeMode(this.model_id);
+                this.showModal = false
                 if (this.notificationtype == "success") {
                     this.$toast.success(this.notification_message.msg)
-                    this.data = {
-                        name: "",
-                        description: "",
-                        maxVotes: "",
-                        priority: 1
-                    }
-                } else {
+                    this.candidate= {
+        firstName: "",
+        lastName: "",
+        categoryId: "",
+        photo: ""
+      }
+         } else {
                     this.submitted = false;
                     this.$toast.error(this.notification_message.msg);
                 }
@@ -77,27 +82,39 @@ export default {
   methods: {
      ...mapActions({
             FetchCandidate: "candidates/fetchCandidate",
-            CreatCandidate: "candidates/creatCandidate"
+            CreatCandidate: "candidates/creatCandidate",
+            FetchCategory: "categories/fetchCategory",
         }),
+        previewImage(event) {
+      const file = event.target.files[0];
+      if (!file) {
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.candidate.photo = reader.result;
+      };
+      reader.readAsDataURL(file);
+    },
     /**
      * Modal form submit
      */
     // eslint-disable-next-line no-unused-vars
-    handleSubmit(e) {
+    handleSubmit() {
       this.submitted = true;
-      // stop here if form is invalid
-      this.$v.$touch();
-      if (this.$v.$invalid) {
-        return;
-      } else {
      this.CreatCandidate(this.candidate)
       this.submitted = false;
-    }
   },
+    closeMode(model_id) {
+            this.$nextTick(() => {
+                this.$bvModal.hide(model_id);
+            });
+        }
    
 },
 created() {
   this.FetchCandidate();
+  this.FetchCategory()
     }
 }
 </script>
@@ -114,7 +131,7 @@ created() {
       </div>
     </div>
     <b-modal v-model="showModal" title="Add Candidate" hide-footer>
-      <form @submit.prevent="handleSubmit">
+      <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
         <div class="row">
           <div class="col-12">
             <div class="mb-3">
@@ -125,17 +142,14 @@ created() {
                 type="text"
                 class="form-control"
                 placeholder="Insert name"
-                :class="{
-                  
-                  'is-invalid': submitted && $v.candidates.name.$error,
-                }"
+              
               />
-              <div
-                v-if="submitted && !$v.candidate.name.required"
+              <!-- <div
+                v-if="submitted && !$v.candidate.firstName.required"
                 class="invalid-feedback"
               >
                 This value is required.
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="col-12">
@@ -147,34 +161,48 @@ created() {
                 type="text"
                 class="form-control"
                 placeholder="Insert designation"
-                :class="{
-                  'is-invalid': submitted && $v.candidates.designation.$error,
-                }"
+               
               />
-              <div
-                v-if="submitted && !$v.candidate.designation.required"
+              <!-- <div
+                v-if="submitted && !$v.candidate.lastName.required"
                 class="invalid-feedback"
               >
                 This value is required.
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="col-12">
             <div class="mb-3">
-              <label for="email">Position</label>
-              <select  class="form-control"  :class="{
-                  'is-invalid': submitted && $v.candidates.positionId.$error,
-                }"   v-model="candidate.positionId">
-                <option value="">Select Position</option>
-                <option></option>
-              </select>
-             
-              <div
-                v-if="submitted && !$v.candidate.positionId.required"
+              <label for="email">Category</label>
+              
+                       <model-list-select
+                         
+                          :list="Category ? Category : []"
+                          v-model="candidate.categoryId"
+                          option-value="id"
+                          option-text="name"
+                          placeholder="select Category"
+                        >
+                        </model-list-select>
+              <!-- <div
+                v-if="submitted && !$v.candidate.categoryId.required"
                 class="invalid-feedback"
               >
                 This value is required.
-              </div>
+              </div> -->
+            </div>
+          </div>
+             <div class="col-12">
+            <div class="mb-3">
+              <label for="email">Photo</label>
+                     <input  class="form-control" type="file" @change="previewImage">
+                     <img v-if="candidate.photo" :src="candidate.photo" alt="Preview">
+              <!-- <div
+                v-if="submitted && !$v.candidate.photo.required"
+                class="invalid-feedback"
+              >
+                This value is required.
+              </div> -->
             </div>
           </div>
          
@@ -213,7 +241,7 @@ created() {
               candidate.firstName+' '+candidate.lastName
               }}</a>
             </h5>
-            <p class="text-muted">{{candidate.Position.name}}</p>
+            <p class="text-muted">{{candidate.Category.name}}</p>
 
             <div>
               <a

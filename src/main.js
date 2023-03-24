@@ -14,6 +14,13 @@ import i18n from './i18n'
 import tinymce from 'vue-tinymce-editor'
 import VueBootstrapToasts from "vue-bootstrap-toasts";
 import axios from 'axios'
+// Import the component
+import VueSearchSelect from 'vue-search-select';
+import 'vue-search-select/dist/VueSearchSelect.css';
+
+// Register the component globally
+Vue.component('vue-search-select', VueSearchSelect);
+
 
 if (process.env.NODE_ENV === 'production') {
 axios.defaults.baseURL = 'https://voteapi.stonixgraphics.com/api/' //production

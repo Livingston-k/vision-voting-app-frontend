@@ -53,6 +53,7 @@
     "vue-number-input-spinner": "^2.2.0",
     "vue-router": "^3.4.9",
     "vue-scrollto": "^2.20.0",
+    "vue-search-select": "2.9.5",
     "vue-simple-drawer": "^1.0.6",
     "vue-slide-bar": "^1.2.0",
     "vue-sweetalert2": "^4.1.1",

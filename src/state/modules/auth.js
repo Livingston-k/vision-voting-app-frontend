@@ -6,7 +6,6 @@ const token = localStorage.getItem('token');
 export const state = {
     user: null,
     token: token ? token : null,
-    user_data: null,
     status: { loggeduser: false },
     loggedIn: false,
     Spinerstatus: false,
@@ -133,8 +132,7 @@ export const actions = {
     logOut({ commit }) {
         commit('logout');
         localStorage.removeItem('token');
-        location.reload(true);
-
+        router.push('/');
     },
 
 };

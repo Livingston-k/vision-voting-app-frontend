@@ -47,6 +47,10 @@ export default {
     this.flag = this.value.flag;
   },
   methods: {
+    logoutUser(){
+  this.$store.dispatch('auth/logOut')
+  this.token = null
+    },
     toggleRightSidebar() {
       this.$parent.toggleRightSidebar();
     },
@@ -388,7 +392,7 @@ export default {
           </b-dropdown-item>
         
           <b-dropdown-divider></b-dropdown-divider>
-          <a href="/logout" class="dropdown-item text-danger">
+          <a href="javascript:;" @click="logoutUser()" class="dropdown-item text-danger">
             <i
               class="bx bx-power-off font-size-16 align-middle me-1 text-danger"
             ></i>

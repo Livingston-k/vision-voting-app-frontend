@@ -65,7 +65,7 @@ export default {
             <div class="col-xl-12">
                 <div class="row">
                     <Stat icon="bxs-book-bookmark" title="Users" :value="Cards.user" />
-                    <Stat icon="bxs-note" title="Positions" :value="Cards.positions" />
+                    <Stat icon="bxs-note" title="Categories" :value="Cards.categories" />
                     <Stat icon="bxs-message-square-dots" title="Candidates" :value="Cards.candidates" />
                     <Stat icon="bxs-message-square-dots" title="Votes" :value="Cards.votes" />
                 </div>
