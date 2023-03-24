@@ -16,7 +16,7 @@ import VueBootstrapToasts from "vue-bootstrap-toasts";
 import axios from 'axios'
 
 if (process.env.NODE_ENV === 'production') {
-axios.defaults.baseURL = 'https://api.vision.com/api/' //production
+axios.defaults.baseURL = 'https://voteapi.stonixgraphics.com/api/' //production
 } else {
 axios.defaults.baseURL = 'http://localhost:3000/api/' //development
 }

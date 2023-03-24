@@ -20,20 +20,18 @@ const router = new VueRouter({
     },
 })
 router.beforeEach((routeTo, routeFrom, next) => {
-    const publicPages = ['/login', '/register', '/forgot-password', '/update_password'];
+    const publicPages = ['/login', '/register', '/forgot-password', '/update_password','/'];
     const authpage = !publicPages.includes(routeTo.path);
     const loggeduser = localStorage.getItem('token');
     if (authpage && !loggeduser) {
-        return next('/login');
-    }
-    if (store.getters['auth/Type'] && routeTo.path == '/home') {
+         return next('/');
+    }else{
+  if (loggeduser && store.getters['auth/Type'] && routeTo.path == '/home') {
     return next('/');
+  }else{
+     next();
   }
-    if (!store.getters['auth/Type'] && routeTo.path == '/') {
-    return next('/home');
-  }
-    next();
-
+    }
 })
 
 router.beforeResolve(async(routeTo, routeFrom, next) => {

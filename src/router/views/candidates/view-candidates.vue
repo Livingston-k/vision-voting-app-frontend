@@ -3,27 +3,24 @@ import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import appConfig from "@/app.config";
 import { required } from "vuelidate/lib/validators";
-import Multiselect from "vue-multiselect";  
+import {
+    mapGetters,
+    mapActions,
+    mapState
+} from "vuex";
+
 
 /**
  * Contacts-grid component
  */
 export default {
   page: {
-    title: "Contact Users Grid",
+    title: "Contact candidate Grid",
     meta: [{ name: "description", content: appConfig.description }],
   },
-  components: { Layout, PageHeader, Multiselect },
+  components: { Layout, PageHeader },
   data() {
     return {
-      userGridData: [
-    {
-        id: 1,
-        name: 'David McHenry',
-        designation: 'UI/UX Designer',
-        projects: ['Photoshop', 'illustrator'],
-        email: 'david@skote.com'
-    }],
       title: "  Candidates",
       items: [
         {
@@ -33,63 +30,81 @@ export default {
       ],
       showModal: false,
       submitted: false,
-      users: {
-        name: "",
-        designation: "",
-        email: "",
+      candidate: {
+        firstName: "",
+        lastName: "",
+        positionId: "",
+        photo: "default.png",
       },
-      value1: null,
-      options: [
-        "Photoshop",
-        "illustrator",
-        "Html",
-        "Css",
-        "Php",
-        "Java",
-        "Python",
-        "Ruby",
-      ],
+     
     };
   },
   validations: {
-    users: {
-      name: { required },
-      designation: { required },
-      email: { required },
+    candidate: {
+      firstName: { required },
+      lastName: { required },
+      positionId: { required },
     },
   },
+    computed: {
+        ...mapState("notification", [
+            "notificationtype",
+            "notification_message",
+            "notification_show",
+        ]),
+        ...mapGetters("candidates", ["Candidates", "Spinner"]),
+    },
+    watch: {
+        notification_show(newValue) {
+            // Do whatever makes sense now
+            if (newValue == true) {
+                this.closeMode(this.model_id);
+                if (this.notificationtype == "success") {
+                    this.$toast.success(this.notification_message.msg)
+                    this.data = {
+                        name: "",
+                        description: "",
+                        maxVotes: "",
+                        priority: 1
+                    }
+                } else {
+                    this.submitted = false;
+                    this.$toast.error(this.notification_message.msg);
+                }
+            }
+        }
+    },
   methods: {
+     ...mapActions({
+            FetchCandidate: "candidates/fetchCandidate",
+            CreatCandidate: "candidates/creatCandidate"
+        }),
     /**
      * Modal form submit
      */
     // eslint-disable-next-line no-unused-vars
     handleSubmit(e) {
       this.submitted = true;
-
       // stop here if form is invalid
       this.$v.$touch();
       if (this.$v.$invalid) {
         return;
       } else {
-        this.userGridData.push({
-          id: this.userGridData.length + 1,
-          name: this.users.name,
-          designation: this.users.designation,
-          projects: this.value1,
-          email: this.users.email,
-        });
-        this.showModal = false;
-        this.users = {};
-        this.value1 = [];
-      }
+     this.CreatCandidate(this.candidate)
       this.submitted = false;
-    },
+    }
   },
-};
+   
+},
+created() {
+  this.FetchCandidate();
+    }
+}
 </script>
 
 <template>
   <Layout>
+    <Toasts :show-progress="true" :rtl="true" :max-messages="20" :time-out="3000" :closeable="false" :solid="true"></Toasts>
     <PageHeader :title="title" :items="items" />
     <div class="row">
      <div class="d-flex">
@@ -103,19 +118,20 @@ export default {
         <div class="row">
           <div class="col-12">
             <div class="mb-3">
-              <label for="name">Event Name</label>
+              <label for="name">First Name</label>
               <input
                 id="name"
-                v-model="users.name"
+                v-model="candidate.firstName"
                 type="text"
                 class="form-control"
                 placeholder="Insert name"
                 :class="{
-                  'is-invalid': submitted && $v.users.name.$error,
+                  
+                  'is-invalid': submitted && $v.candidates.name.$error,
                 }"
               />
               <div
-                v-if="submitted && !$v.users.name.required"
+                v-if="submitted && !$v.candidate.name.required"
                 class="invalid-feedback"
               >
                 This value is required.
@@ -124,19 +140,19 @@ export default {
           </div>
           <div class="col-12">
             <div class="mb-3">
-              <label for="name">Designation</label>
+              <label for="name">Last Name</label>
               <input
                 id="name"
-                v-model="users.designation"
+                v-model="candidate.lastName"
                 type="text"
                 class="form-control"
                 placeholder="Insert designation"
                 :class="{
-                  'is-invalid': submitted && $v.users.designation.$error,
+                  'is-invalid': submitted && $v.candidates.designation.$error,
                 }"
               />
               <div
-                v-if="submitted && !$v.users.designation.required"
+                v-if="submitted && !$v.candidate.designation.required"
                 class="invalid-feedback"
               >
                 This value is required.
@@ -145,125 +161,78 @@ export default {
           </div>
           <div class="col-12">
             <div class="mb-3">
-              <label for="email">Email</label>
-              <input
-                id="email"
-                v-model="users.email"
-                type="email"
-                class="form-control"
-                placeholder="Insert email"
-                :class="{
-                  'is-invalid': submitted && $v.users.email.$error,
-                }"
-              />
+              <label for="email">Position</label>
+              <select  class="form-control"  :class="{
+                  'is-invalid': submitted && $v.candidates.positionId.$error,
+                }"   v-model="candidate.positionId">
+                <option value="">Select Position</option>
+                <option></option>
+              </select>
+             
               <div
-                v-if="submitted && !$v.users.email.required"
+                v-if="submitted && !$v.candidate.positionId.required"
                 class="invalid-feedback"
               >
                 This value is required.
               </div>
             </div>
           </div>
-          <div class="col-12">
-            <label for="projects">Projects</label>
-            <multiselect
-              v-model="value1"
-              :options="options"
-              :multiple="true"
-            ></multiselect>
-          </div>
+         
         </div>
         <div class="text-end mt-3">
           <b-button variant="light" @click="showModal = false">Close</b-button>
           <b-button type="submit" variant="success" class="ms-1"
-            >Create event</b-button
+            >Create candidate</b-button
           >
         </div>
       </form>
     </b-modal>
     <div class="row">
       <div
-        v-for="user in userGridData"
-        :key="user.id"
+        v-for="candidate in Candidates"
+        :key="candidate.id"
         class="col-xl-3 col-sm-6"
       >
         <div class="card text-center">
           <div class="card-body">
-            <div v-if="!user.image" class="avatar-sm mx-auto mb-4">
+            <div v-if="candidate.photo=='default.png'" class="avatar-sm mx-auto mb-4">
               <span
                 class="avatar-title rounded-circle bg-soft bg-primary text-primary font-size-16"
-                >{{ user.name.charAt(0) }}</span
+                >{{ candidate.firstName.charAt(0) }}</span
               >
             </div>
-            <div v-if="user.image" class="mb-4">
+            <div v-if="candidate.photo!='default.png'" class="mb-4">
               <img
                 class="rounded-circle avatar-sm"
-                :src="`${user.image}`"
+                :src="`${candidate.photo}`"
                 alt
               />
             </div>
             <h5 class="font-size-15 mb-1">
               <a href="javascript: void(0);" class="text-dark">{{
-                user.name
+              candidate.firstName+' '+candidate.lastName
               }}</a>
             </h5>
-            <p class="text-muted">{{ user.designation }}</p>
+            <p class="text-muted">{{candidate.Position.name}}</p>
 
             <div>
               <a
                 href="javascript: void(0);"
-                class="badge bg-primary font-size-11 m-1"
-                >{{ user.projects[0] }}</a
+                class="btn btn-primary font-size-11 m-1"
+                >Profile</a
               >
-              <a
-                href="javascript: void(0);"
-                class="badge bg-primary font-size-11 m-1"
-                >{{ user.projects[1] }}</a
-              >
-              <a
-                href="javascript: void(0);"
-                class="badge bg-primary font-size-11 m-1"
-                >{{ user.projects[2] }}</a
-              >
+             
             </div>
           </div>
           <div class="card-footer bg-transparent border-top">
-            <div class="contact-links d-flex font-size-20">
-              <div class="flex-fill">
-                <a
-                  v-b-tooltip.hover.top
-                  title="Message"
-                  href="javascript: void(0);"
-                >
-                  <i class="bx bx-message-square-dots"></i>
-                </a>
-              </div>
-              <div class="flex-fill">
-                <a
-                  v-b-tooltip.hover.top
-                  title="Projects"
-                  href="javascript: void(0);"
-                >
-                  <i class="bx bx-pie-chart-alt"></i>
-                </a>
-              </div>
-              <div class="flex-fill">
-                <a
-                  v-b-tooltip.hover.top
-                  title="Profile"
-                  href="javascript: void(0);"
-                >
-                  <i class="bx bx-user-circle"></i>
-                </a>
-              </div>
-            </div>
+           
           </div>
         </div>
       </div>
       <!-- end col -->
     </div>
     <!-- end row -->
-    <div class="row">
+    <div class="row" v-show="!Candidates">
       <div class="col-12">
         <div class="text-center my-3">
           <a href="javascript:void(0);" class="text-success">
