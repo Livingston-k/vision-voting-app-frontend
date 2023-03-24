@@ -93,8 +93,8 @@
     "apps": {
       "text": "Apps"
     },
-    "positions": {
-      "text": "Positions"
+    "categories": {
+      "text": "categories"
     },
     "candidates": {
       "text": "Candidates"

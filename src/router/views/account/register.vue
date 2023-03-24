@@ -24,11 +24,11 @@ export default {
   data() {
     return {
       user: {
-        fullName: "Kaddu Livingstone",
-        email: "kaddulivingston1@gmail.com",
+        fullName: "",
+        email: "",
         countryId: "235",
-        password: "123456",
-        confirm_password: "123456",
+        password: "",
+        confirm_password: "",
       },
       submitted: false,
       regError: null,
@@ -68,10 +68,10 @@ export default {
       // alert("yooo")
       this.submitted = true;
       // stop here if form is invalid
-      // this.$v.$touch();
-      // if (this.$v.$invalid) {
-      //   return;
-      // } 
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      } 
           const { email, fullName, password } = this.user;
           if (email && fullName && password) {
             this.$store.dispatch("auth/register", this.user);

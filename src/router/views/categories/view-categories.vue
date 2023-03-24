@@ -15,7 +15,7 @@ import {
  */
 export default {
     page: {
-        title: "Positions",
+        title: "Categories",
         meta: [{
             name: "description",
             content: appConfig.description,
@@ -28,13 +28,13 @@ export default {
     data() {
         return {
             model_id: "",
-            title: "Positions",
+            title: "Categories",
             items: [{
                     text: "Home",
                     href: "/",
                 },
                 {
-                    text: "Positions",
+                    text: "Categories",
                     active: true,
                 },
             ],
@@ -92,19 +92,19 @@ export default {
             "notification_message",
             "notification_show",
         ]),
-        ...mapGetters("position", ["Positions", "Spinner"]),
+        ...mapGetters("categories", ["Category", "Spinner"]),
         /**
          * Total no. of records
          */
         rows() {
-            return this.Positions.length;
+            return this.Category.length;
         },
 
         /**
          * Todo list of records
          */
-        positionsList() {
-            return this.Positions.length;
+        CategoryList() {
+            return this.Category.length;
         },
     },
     watch: {
@@ -128,18 +128,18 @@ export default {
         },
     },
     mounted() {
-        this.totalRows = this.Positions;
-        this.positionTotalRows = this.Positions.length;
+        this.totalRows = this.Category;
+        this.positionTotalRows = this.Category.length;
 
     },
     methods: {
         ...mapActions({
-            FetchPositions: "position/fetchPositions",
-            CreatPositions: "position/creatPositions"
+            FetchCategory: "categories/fetchCategory",
+            CreatCategory: "categories/creatCategory"
         }),
         savePosition(modalId) {
             this.model_id = modalId;
-            this.CreatPositions(this.data)
+            this.CreatCategory(this.data)
         },
         editUser(data){
 data
@@ -165,7 +165,7 @@ data
         },
     },
     created() {
-        this.FetchPositions();
+        this.FetchCategory();
     },
 };
 </script>
@@ -178,7 +178,7 @@ data
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <b-button v-b-modal.modal-addposition variant="primary">Create Position</b-button>
+                    <b-button v-b-modal.modal-addposition variant="primary">Create Category</b-button>
                     <b-modal id="modal-addposition" title="Create New Position" title-class="font-18" hide-footer>
                         <b-form>
                             <b-form-group class="mb-3" label="Name" label-for="formrow-firstname-input">
@@ -220,7 +220,7 @@ data
                     </div>
                     <!-- Table -->
                     <div class="table-responsive mb-0">
-                        <b-table class="datatables" :items="Positions" :fields="fields" responsive="sm" :per-page="perPage" :current-page="currentPage" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :filter="filter" :filter-included-fields="filterOn" @filtered="onFiltered">
+                        <b-table class="datatables" :items="Category" :fields="fields" responsive="sm" :per-page="perPage" :current-page="currentPage" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" :filter="filter" :filter-included-fields="filterOn" @filtered="onFiltered">
                             <template #cell(index)="data">
                                 {{ data.index + 1 }}
                             </template>

@@ -16,9 +16,9 @@ export const menuItems = [
     },
     {
         id: 9,
-        label: "menuitems.positions.text",
+        label: "menuitems.categories.text",
         icon: "bx-calendar",
-        link: "/positions"
+        link: "/categories"
     },
     {
         id: 10,

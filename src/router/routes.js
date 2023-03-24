@@ -96,10 +96,10 @@ export default [
     redirect: '404',
   },
   {
-    path: '/positions',
-    name: 'Positions',
+    path: '/categories',
+    name: 'Categories',
     meta: { authRequired: true },
-    component: () => import('./views/position/view-positions.vue')
+    component: () => import('./views/categories/view-categories.vue')
   },
   {
     path: '/candidates',
