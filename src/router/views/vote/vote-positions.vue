@@ -2,139 +2,99 @@
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import appConfig from "@/app.config";
-
-import { projectData } from "./data-projects";
+import {
+    mapGetters,
+    mapActions
+} from "vuex";
 
 /**
- * Projects-grid component
+ * Projects-position component
  */
 export default {
-  page: {
-    title: "Vote Positions",
-    meta: [
-      {
-        name: "description",
-        content: appConfig.description,
-      },
-    ],
-  },
-  components: {
-    Layout,
-    PageHeader,
-  },
-  data() {
-    return {
-      projectData: projectData,
-      title: "Vote Positions",
-      items: [
-        {
-          text: "Vote Positions",
-          href: "/",
-        },
-      ],
-    };
-  },
+    page: {
+        title: "Vote Positions",
+        meta: [{
+            name: "description",
+            content: appConfig.description,
+        }, ],
+    },
+    components: {
+        Layout,
+        PageHeader,
+    },
+    data() {
+        return {
+            title: "Vote Positions",
+            items: [{
+                text: "Vote Positions",
+                href: "/",
+            }, ],
+        };
+    },
+    computed: {
+        ...mapGetters("votes", ["Votecandidates", "Spinner"]),
+    },
+    methods: {
+        ...mapActions({
+            FetchsVoteCandidates: "votes/fetchsVoteCandidates"
+        }),
+    },
+    created() {
+        this.FetchsVoteCandidates();
+    },
 };
 </script>
 
 <template>
-  <Layout>
+<Layout>
     <PageHeader :title="title" :items="items" />
     <div class="row">
-      <div v-for="grid in projectData" :key="grid.id" class="col-xl-4 col-sm-6">
-        <div class="card">
-          <div class="card-body">
-            <div class="media">
-              <div class="avatar-md me-4">
-                <span
-                  class="avatar-title rounded-circle bg-light text-danger font-size-16"
-                >
-                  <img :src="`${grid.image}`" alt height="30" />
-                </span>
-              </div>
+        <div v-for="position in Votecandidates" :key="position.id" class="col-xl-4 col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="avatar-md me-4">
+                            <span class="avatar-title rounded-circle bg-light text-danger font-size-16">
+                                <img :src="`${require('@/assets/images/companies/img-5.png')}`" alt height="30" />
+                            </span>
+                        </div>
 
-              <div class="media-body overflow-hidden">
-                <h5 class="text-truncate font-size-15">
-                  <a href="javascript: void(0);" class="text-dark">{{
-                    grid.text
-                  }}</a>
-                </h5>
-                <p class="text-muted mb-4">{{ grid.subtext }}</p>
-                <div class="avatar-group">
-                  <div class="avatar-group-item">
-                    <a
-                      href="javascript: void(0);"
-                      class="d-inline-block"
-                    >
-                      <img
-                        :src="`${grid.users[0]}`"
-                        class="rounded-circle avatar-xs"
-                        alt
-                      />
-                    </a>
-                  </div>
-                  <div class="avatar-group-item" v-if="grid.users[1]">
-                    <a
-                      href="javascript: void(0);"
-                      class="d-inline-block"
-                    >
-                      <img
-                        :src="`${grid.users[1]}`"
-                        class="rounded-circle avatar-xs"
-                        alt
-                      />
-                    </a>
-                  </div>
-                  <div class="avatar-group-item" v-if="grid.users[2]">
-                    <a
-                      href="javascript: void(0);"
-                      class="d-inline-block"
-                    >
-                      <img
-                        :src="`${grid.users[2]}`"
-                        class="rounded-circle avatar-xs"
-                        alt
-                      />
-                    </a>
-                  </div>
+                        <div class="media-body overflow-hidden">
+                            <h5 class="text-truncate font-size-15">
+                                <a href="javascript: void(0);" class="text-dark">{{
+                                position.name
+                                 }}</a>
+                            </h5>
+                        <p class="text-muted mb-4 text-truncate">{{ position.description }}</p>
+                            <div class="avatar-group">
+                                <div class="avatar-group-item" v-for="(candidate,index) in position.candidates" :key="index">
+                                    <a href="javascript: void(0);" class="d-inline-block">
+                                        <img :src="`${require('@/assets/images/users/avatar-7.jpg')}`" class="rounded-circle avatar-xs" alt />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
+                <div class="px-4 py-3 border-top">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item me-3">
+                            <router-link :to="{
+                            name: 'Polling',
+                            params: {
+                              id: position.id
+                            },
+                          }">
+                                <button class="btn btn-primary btn-sm">
+                                    Vote Now <span class="mdi mdi-ballot"></span>
+                                </button>
+                            </router-link>
+                        </li>
+                    </ul>
+                </div>
             </div>
-          </div>
-          <div class="px-4 py-3 border-top">
-            <ul class="list-inline mb-0">
-              <li class="list-inline-item me-3">
-                <span
-                  class="badge"
-                  :class="{
-                    'bg-success': `${grid.status}` === 'Completed',
-                    'bg-warning': `${grid.status}` === 'Pending',
-                    'bg-danger': `${grid.status}` === 'Delay',
-                  }"
-                  >{{ grid.status }}</span
-                >
-              </li>
-              <li
-                v-b-tooltip.hover.top
-                class="list-inline-item me-3"
-                title="Due Date"
-              >
-                <i class="bx bx-calendar me-1"></i>
-                {{ grid.date }}
-              </li>
-              <li
-                v-b-tooltip.hover.top
-                class="list-inline-item me-3"
-                title="Votes"
-              >
-                <i class="bx bx-comment-dots me-1"></i>
-                {{ grid.comment }}
-              </li>
-            </ul>
-          </div>
         </div>
-      </div>
     </div>
-   
-  </Layout>
+
+</Layout>
 </template>
