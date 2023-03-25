@@ -130,9 +130,8 @@ export const actions = {
     },
     // Logout the user
     logOut({ commit }) {
-        commit('logout');
-        localStorage.removeItem('token');
-        router.push('/');
+commit('logout');
+localStorage.removeItem('token');
     },
 
 };

@@ -9,6 +9,14 @@ export default [
     },
     component: () => import('./views/vote/vote-positions.vue'),
   },
+  {
+    path: '/polling/:id',
+    name: 'Polling',
+    meta: {
+      authRequired: true,
+    },
+    component: () => import('./views/vote/polling.vue'),
+  },
     {
     path: '/home',
     name: 'HomeDefault',
